@@ -60,7 +60,7 @@ export default function AxesHelper(props: { camera: Camera } & React.ComponentPr
     const sorted = axes.sort(([axis1], [axis2]) => axis2[3] - axis1[3])
     const colors = ['hsl(340 75% 55%)', 'hsl(160, 60%, 45%)', 'hsl(220 70% 50%)']
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} className={cn("w-[150px] h-[150px] select-none", className)} {...rest} onMouseDown={onMouseDown} onMouseEnter={() => circleRef.current?.style.setProperty('opacity', '1.0')} onMouseLeave={() => circleRef.current?.style.setProperty('opacity', '0.0')}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${width} ${height}`} className={cn("w-[150px] h-[150px] select-none", className)} {...rest} onMouseDown={onMouseDown} onMouseMove={() => circleRef.current?.style.setProperty('opacity', '1.0')} onMouseLeave={() => circleRef.current?.style.setProperty('opacity', '0.0')}>
             <circle ref={circleRef} cx={width / 2} cy={height / 2} r={width / 2 - circleRadius} fill="rgba(255, 255, 255, 0.1)" opacity={0.0} className="cursor-move" />
             {sorted.map(([axis, idx]) => {
                 return (

@@ -2,9 +2,13 @@ import path from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "tailwindcss"
 import { defineConfig } from "vite"
+import slang from "./src/vite-plugin-slang"
  
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), slang()],
+  worker: {
+    plugins: () => [slang()],
+  },
   css: {
     postcss: {
       plugins: [tailwindcss()],

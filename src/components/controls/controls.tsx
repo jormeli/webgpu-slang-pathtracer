@@ -89,7 +89,7 @@ const Controls = () => {
                 </div>
             </div>
         </Section>
-        <Section title="Render" className="pb-2">
+        <Section title="Renderer" className="pb-2">
             <div className="px-2 w-full">
                 <div className="grid grid-cols-[minmax(40px,_1fr)_210px] gap-2">
                     <Label>Mode</Label>

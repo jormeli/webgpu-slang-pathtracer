@@ -1,5 +1,5 @@
 import bdptShader from './shaders/bdpt';
-import rasterShader from './shaders/raster.wgsl?raw';
+import rasterShader from './shaders/raster.slang';
 import { makeShaderDataDefinitions, makeStructuredView, getSizeAndAlignmentOfUnsizedArrayElement, createBuffersAndAttributesFromArrays } from 'webgpu-utils';
 import Scene from './scene';
 import Camera from './camera';
@@ -219,12 +219,12 @@ export class RasterPipeline extends Pipeline {
             layout: 'auto',
             vertex: {
               module: shaderModule,
-              entryPoint: 'vertex_main',
+              entryPoint: 'vertexMain',
               buffers: bi.bufferLayouts,
             },
             fragment: {
               module: shaderModule,
-              entryPoint: 'fragment_main',
+              entryPoint: 'fragmentMain',
               targets: [
                 {format: navigator.gpu.getPreferredCanvasFormat()},
               ],
@@ -252,7 +252,7 @@ export class RasterPipeline extends Pipeline {
         const viewProjectionMatrix = mat4.create()
         mat4.multiply(viewProjectionMatrix, this.camera.projectionMatrix, this.camera.viewMatrix);
 
-        this.device.queue.writeBuffer(this.buffers.viewProjectionMatrixBuffer, 0, new Float32Array(viewProjectionMatrix));
+        this.device.queue.writeBuffer(this.buffers.viewProjectionMatrixBuffer, 0, new Float32Array(mat4.transpose(mat4.create(), viewProjectionMatrix)));
 
         if (!this.depthTexture) {
             this.depthTexture = this.device.createTexture({
