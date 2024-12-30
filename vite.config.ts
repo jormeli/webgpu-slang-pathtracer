@@ -9,6 +9,7 @@ export default defineConfig({
   worker: {
     plugins: () => [slang()],
   },
+  base: "/webgpu-slang-pathtracer/",
   css: {
     postcss: {
       plugins: [tailwindcss()],
