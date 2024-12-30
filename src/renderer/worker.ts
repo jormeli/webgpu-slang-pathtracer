@@ -66,7 +66,17 @@ async function init(_canvas: HTMLCanvasElement) {
     throw Error('No params provided')
     return
   }
-  await initDevice()
+  try {
+    await initDevice()
+  } catch (err) {
+    if (err instanceof Error) {
+      console.error(`Error while initializing WebGPU in worker process: ${err.message}`)
+      self.postMessage({ type: 'error', message: err.message })
+    } else {
+      console.error('Unknown error while initializing WebGPU in worker process')
+    }
+    return
+  }
 
   canvas = _canvas
   let _context = canvas.getContext('webgpu')

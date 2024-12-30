@@ -3,6 +3,7 @@ import useRenderWorker, { type RenderStatus, type RenderParams } from './useRend
 import { vec3 } from 'gl-matrix'
 import { fps, frameNum } from '@/state'
 import { useSignals } from '@preact/signals-react/runtime'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const Renderer = memo((props: RenderParams & { onStatus?: (status: RenderStatus) => void }) => {
   useSignals()
@@ -10,7 +11,7 @@ const Renderer = memo((props: RenderParams & { onStatus?: (status: RenderStatus)
   const { onStatus, ...rest } = props
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const { init, setCamera } = useRenderWorker({
+  const { init, setCamera, error } = useRenderWorker({
     params: rest,
     onStatus: (status) => {
       fps.value = status.fps
@@ -79,7 +80,14 @@ const Renderer = memo((props: RenderParams & { onStatus?: (status: RenderStatus)
     }
   }, [])
 
-  return <canvas ref={canvasRef} width={width} height={height} className="max-w-[100%]" />
+  return error ? (
+    <Alert variant="destructive" className="w-[300px]">
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>{error}</AlertDescription>
+    </Alert>
+  ) : (
+    <canvas ref={canvasRef} width={width} height={height} className="max-w-[100%]" />
+  )
 })
 Renderer.displayName = 'Renderer'
 

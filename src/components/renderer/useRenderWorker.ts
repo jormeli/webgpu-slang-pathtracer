@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import Scene from '@/renderer/scene'
 import Camera from '@/renderer/camera'
 
@@ -29,12 +29,20 @@ export default function useRenderWorker(props: { params: RenderParams; onStatus?
     fps: 0,
     isWorking: false,
   })
+  const [error, setError] = useState<string | null>(null)
 
   const onMessage = useCallback((event: MessageEvent) => {
     const { type, ...rest } = event.data
-    if (type === 'stats') {
-      Object.assign(stats.current, rest, { isWorking: true })
-      onStatus?.(stats.current)
+    switch (type) {
+      case 'stats':
+        Object.assign(stats.current, rest, { isWorking: false })
+        onStatus?.(stats.current)
+        break
+      case 'error':
+        setError(rest.message)
+        break
+      default:
+        break
     }
   }, [])
 
@@ -65,5 +73,5 @@ export default function useRenderWorker(props: { params: RenderParams; onStatus?
     workerRef.current?.postMessage({ type: 'setParam', key, value })
   }, [])
 
-  return { stats: stats.current!, init, setCamera, setParam }
+  return { stats: stats.current!, init, setCamera, setParam, error }
 }
